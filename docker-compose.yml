@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    image: postgres
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: abcd1234
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    networks:
+      - nest-graphql
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - nest-graphql
+
+networks:
+  nest-graphql:
+    

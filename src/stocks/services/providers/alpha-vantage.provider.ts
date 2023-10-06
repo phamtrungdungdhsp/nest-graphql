@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { IStockService } from '../../interfaces/index.interface';
 import { RequestUtil } from '../../../ultils/request.util';
 import { StockIntervalEnum, StockResolutionEnum } from '../../enums/stock.enum';
@@ -8,8 +8,7 @@ import {
   StockDataList,
   StockPrice,
 } from '../../models/stock-price.model';
-import * as process from "process";
-import { QueryOption } from "src/stocks/args/get-stock-price.arg";
+import { QueryOption } from 'src/stocks/args/get-stock-price.arg';
 
 @Injectable()
 export class AlphaVanTageProvider implements IStockService {
@@ -23,20 +22,17 @@ export class AlphaVanTageProvider implements IStockService {
     options?: QueryOption,
   ): Promise<StockPrice> {
     let url = `${this.hostName}/query?apikey=${process.env.ALPHA_VANTAGE_API_KEY}&symbol=${name}&function=${resolution}`;
-    if (options.month) url += `&month=${options.month}`;
-    if (options.outputSize) url += `&outputsize=${options.outputSize}`;
-    if (typeof options.extendedHours === 'boolean')
+    if (options?.month) url += `&month=${options.month}`;
+    if (options?.outputSize) url += `&outputsize=${options.outputSize}`;
+    if (typeof options?.extendedHours === 'boolean')
       url += `&extended_hours=${options.extendedHours.toString()}`;
-    if (typeof options.adjusted === 'boolean')
+    if (typeof options?.adjusted === 'boolean')
       url += `&extended_hours=${options.adjusted.toString()}`;
-    if (
-      resolution === StockResolutionEnum.TIME_SERIES_INTRADAY &&
-      interval
-    )
+    if (resolution === StockResolutionEnum.TIME_SERIES_INTRADAY && interval)
       url += `&interval=${interval}`;
     const data = await RequestUtil.get(url);
     if (data?.['Error Message']) {
-      throw new BadRequestException('Error during processing.')
+      throw new BadRequestException('Error during processing.');
     }
     return this.formatAlphaVantageData(data);
   }
